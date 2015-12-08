@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+　　<html>
+		<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="/stylesheets/pygments.css" rel="stylesheet" type="text/css">
+<!-- <link href="/stylesheets/github.css" rel="stylesheet" type="text/css"> -->
+<link rel="stylesheet" type="text/css" href="/stylesheets/default.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/blog.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/sticky-footer-navbar.css"/>
+<script src="/javascripts/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+<link rel="shortcut icon" href="http://blog.liwenmao.com/favicon.ico" />
+<link rel="Bookmark" href="http://blog.liwenmao.com/favicon.ico" />
+<title>AWK学习笔记</title>
+</head>
+		<script src="/javascripts/toc.js" type="text/javascript"></script>
+		 <!-- <script type="text/javascript" src="/javascripts/post.min.js"></script> -->
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">cocorookie</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <!-- <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li> -->
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Categories <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <!-- <li><a href="#">Java</a></li> -->  
+                <li><a href="http://blog.liwenmao.com/app">app</a></li>
+                <li><a href="http://blog.liwenmao.com/oc">oc</a></li>
+                <li><a href="http://blog.liwenmao.com/shell">shell</a></li>
+                <!-- <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li> -->
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+		<div id="content">
+			<div class="entry">
+				<h1 class="entry-title"><a title="AWK学习笔记">AWK学习笔记</a></h1>
+				<!--p class="entry-date">2015-01-10</p-->
+				<div class="pageInfo">
+					<span>Posted by 	
+					北羽
+					</span>
+					<span class="point">•</span>
+					<span><time pubdate="" data-updated="true">01 Dec 2015</time></span>
+					<span class="point">•</span>
+					<span class="categories">
+						
+						<a href="/shell" title="Category: shell" rel="category">shell</a>
+						
+						
+					</span>
+					<span class="comment">
+						<a href="#comments_container" title="Comments"><i class="icon-comment-o"></i></a>
+					</span>
+				</div>
+				<div class="pageTag">
+					
+					<!--a href="/blog/tag/#Jekyll-ref" title="Tag: Jekyll" rel="tag">Jekyll</a-->
+					<a  rel="tag">shell</a>&nbsp;
+					
+					<!--a href="/blog/tag/#Jekyll-ref" title="Tag: Jekyll" rel="tag">Jekyll</a-->
+					<a  rel="tag">awk</a>&nbsp;
+					
+				</div>
+				<h1 id="1-awk的基本语法">1 awk的基本语法</h1>
+
+<p><br/></p>
+
+<h3 id="1-1-awk命令的两种格式">1.1 awk命令的两种格式</h3>
+
+<p>awk共有如下两种命令格式</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="o">[</span>options<span class="o">]</span> <span class="s1">&#39;pattern {action}&#39;</span> <span class="nv">var</span><span class="o">=</span>value file<span class="o">(</span>s<span class="o">)</span>
+awk <span class="o">[</span>options<span class="o">]</span> -f scriptfile <span class="nv">var</span><span class="o">=</span>value file<span class="o">(</span>s<span class="o">)</span></code></pre></figure>
+
+<h3 id="1-2-命令选项">1.2 命令选项</h3>
+
+<p><code>-F fs  or --field-separator fs</code>指定输入文件的列分隔符，fs是一个字符串或者是一个正则表达式。例如：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk  -F: <span class="s1">&#39;{print $1,$3,$6}&#39;</span> /etc/passwd</code></pre></figure>
+
+<p>我们也可以指定多个分隔符，例如：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk -F <span class="s1">&#39;[:;]&#39;</span> <span class="s1">&#39;{print $1,$3,$6}&#39;</span> /etc/passwd</code></pre></figure>
+
+<p><code>-f scripfile or --file scriptfile</code>从脚本文件中读取awk命令。</p>
+
+<h3 id="1-3-模式和操作">1.3 模式和操作</h3>
+
+<p>awk脚本是由模式和操作组成的：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">pattern {action} 
+</code></pre></div>
+<p>例如:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;/root/&#39;</span> /etc/passwd
+awk <span class="s1">&#39;{print $1}&#39;</span> /etc/passwd
+awk <span class="s1">&#39;/root/ {print $1}&#39;</span> /etc/passwd</code></pre></figure>
+
+<p>两者是可选的，如果没有模式，则action应用到全部记录，如果没有action，则输出匹配全部记录。默认情况下，每一个输入行都是一条记录，但用户可通过RS变量指定不同的分隔符进行分隔。  </p>
+
+<h4 id="1-3-1-模式">1.3.1 模式</h4>
+
+<p>模式可以是以下任意一个：  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">1. /正则表达式/：使用通配符的扩展集。  
+2. 关系表达式：可以用下面运算符表中的关系运算符进行操作，可以是字符串或数字的比较，如$2&gt;%1选择第二个字段比第一个字段长的行。  
+3. 模式匹配表达式：用运算符~(匹配)和~!(不匹配)。  
+4. BEGIN：让用户指定在第一条输入记录被处理之前所发生的动作，通常可在这里设置全局变量。
+5. END：让用户在最后一条输入记录被读取之后发生的动作。
+</code></pre></div>
+<h4 id="1-3-2-操作">1.3.2 操作</h4>
+
+<p>操作由一个或多个命令、函数、表达式组成，之间由换行符或分号隔开，并位于大括号内。主要有四部份：  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">1. 变量或数组赋值
+2. 输出命令
+3. 内置函数
+4. 控制流命令
+</code></pre></div>
+<h1 id="2-awk的内置变量">2 awk的内置变量</h1>
+
+<table>
+<tr><td>变量</td><td>描述</td></tr>
+<tr><td>$n</td><td>当前记录的第n个字段，字段间由FS分隔。</td></tr>
+<tr><td>$n</td><td>当前记录的第n个字段，字段间由FS分隔。</td></tr>
+<tr><td>$0</td><td>完整的输入记录。</td></tr>
+<tr><td>ARGC</td><td>命令行参数的数目。</td></tr>
+<tr><td>ARGIND</td><td>命令行中当前文件的位置(从0开始算)。</td></tr>
+<tr><td>ARGV</td><td>包含命令行参数的数组。</td></tr>
+<tr><td>CONVFMT</td><td>数字转换格式(默认值为%.6g)</td></tr>
+<tr><td>ENVIRON</td><td>环境变量关联数组。</td></tr>
+<tr><td>ERRNO</td><td>最后一个系统错误的描述。</td></tr>
+<tr><td>FIELDWIDTHS</td><td>字段宽度列表(用空格键分隔)。</td></tr>
+<tr><td>FILENAME</td><td>当前文件名。</td></tr>
+<tr><td>FNR</td><td>同NR，但相对于当前文件。</td></tr>
+<tr><td>FS</td><td>字段分隔符(默认是任何空格)。</td></tr>
+<tr><td>IGNORECASE</td><td>如果为真，则进行忽略大小写的匹配。</td></tr>
+<tr><td>NF</td><td>当前记录中的字段数。</td></tr>
+<tr><td>NR</td><td>当前记录数。</td></tr>
+<tr><td>OFMT</td><td>数字的输出格式(默认值是%.6g)。</td></tr>
+<tr><td>OFS</td><td>输出字段分隔符(默认值是一个空格)。</td></tr>
+<tr><td>ORS</td><td>输出记录分隔符(默认值是一个换行符)。</td></tr>
+<tr><td>RLENGTH</td><td>由match函数所匹配的字符串的长度。</td></tr>
+<tr><td>RS</td><td>记录分隔符(默认是一个换行符)。</td></tr>
+<tr><td>RSTART</td><td>由match函数所匹配的字符串的第一个位置。</td></tr>
+<tr><td>SUBSEP</td><td>数组下标分隔符(默认值是\034)。</td></tr>
+</table>
+
+<h1 id="3-awk运算符">3 awk运算符</h1>
+
+<table>
+<tr><td>运算符</td><td>描述</td></tr>
+<tr><td>= += -= *= /= %= ^= **=</td><td>赋值</td></tr>
+<tr><td>?:</td><td>C条件表达式</td></tr>
+<tr><td>||</td><td>逻辑或</td></tr>
+<tr><td>&&</td><td>逻辑与</td></tr>
+<tr><td>~ ~!</td><td>匹配正则表达式和不匹配正则表达式</td></tr>
+<tr><td>< <= > >= != ==</td><td>关系运算符</td></tr>
+<tr><td>空格</td><td>连接</td></tr>
+<tr><td>+ -</td><td>加，减</td></tr>
+<tr><td>* / &</td><td>乘，除，与</td></tr>
+<tr><td>+ - !</td><td>一元加，减和逻辑非</td></tr>
+<tr><td>^ ***</td><td>求幂</td></tr>
+<tr><td>++ --</td><td>增加或减少，作为前缀或后缀</td></tr>
+<tr><td>$</td><td>字段引用</td></tr>
+<tr><td>in</td><td>数组成员</td></tr>
+</table>
+
+<h1 id="4-记录和域">4 记录和域</h1>
+
+<p><br/></p>
+
+<h3 id="4-1-记录">4.1 记录</h3>
+
+<p>awk把每一个以换行符结束的行称为一个记录。  </p>
+
+<ol>
+<li>记录分隔符：默认的输入和输出的分隔符都是回车，保存在内建变量ORS和RS中。<br></li>
+<li>$0变量：它指的是整条记录。如<code>awk &#39;{print $0}&#39; test</code>将输出test文件中的所有记录。<br></li>
+<li>变量NR：一个计数器，每处理完一条记录，NR的值就增加1。如awk &#39;{print NR,$0}&#39; test将输出test文件中所有记录，并在记录前显示记录号。</li>
+</ol>
+
+<h3 id="4-2-域">4.2 域</h3>
+
+<p>记录中每个单词称做“域”。</p>
+
+<ol>
+<li>域分隔符：默认情况下以空格或tab分隔。我们可以使用-F指定分割符。</li>
+<li>变量NF：域的计数器，每行有多少个域，会记录在这个内建变量中。</li>
+<li>$n变量：用来表示第几个域，例如<code>awk &#39;{print $1}&#39; test</code> 用来输出test文件中每一行的第一个域。</li>
+</ol>
+
+<h1 id="5-正则表达式">5 正则表达式</h1>
+
+<p>在awk运费算符一节中，已经结束哦了匹配正则表达式和不匹配正则表达式的符号。分别是<code>~</code>,<code>~!</code>。例如我想匹配行中有Got的行，可以这样写：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;$0 ~ /Got/&#39;</span> test.txt</code></pre></figure>
+
+<p>正则表达式需要用<code>/ /</code>包裹起来。正则表达式的写法，可以参照这里：<a href="http://deerchao.net/tutorials/regex/regex.htm">正则表达式教程</a></p>
+
+<h1 id="6-awk-编程">6 awk 编程</h1>
+
+<p>awk支持命令行合适和脚本格式， 如果我们需要处理的逻辑很复杂，使用脚本自然是一个非常有效的方式。我们可以使用<code>-f</code>选项来指定awk的脚本。</p>
+
+<h3 id="6-1-变量">6.1 变量</h3>
+
+<ol>
+<li>awk中，变量不需要定义就可以直接使用，变量类型可以是数字或字符串。</li>
+<li>赋值格式：Variable = expression，如：<code>awk &#39;$1 ~/test/{count = $2 + $3; print count}&#39; test</code>,上式的作用是,awk先扫描第一个域，一旦test匹配，就把第二个域的值加上第三个域的值，并把结果赋值给变量count，最后打印出来。</li>
+<li>awk可以在命令行中给变量赋值，然后将这个变量传输给awk脚本。如$ awk -F: -f awkscript month=4 year=2004 test，上式的month和year都是自定义变量，分别被赋值为4和2004。在awk脚本中，这些变量使用起来就象是在脚本中建立的一样。<code>注意，如果参数前面出现test，那么在BEGIN语句中的变量就不能被使用。</code></li>
+<li>域变量也可被赋值和修改，如<code>awk &#39;{$2 = 100 + $1; print }&#39; test</code>,上式表示，如果第二个域不存在，awk将计算表达式100加$1的值，并将其赋值给$2，如果第二个域存在，则用表达式的值覆盖$2原来的值。再例如：<code>awk &#39;$1 == &quot;root&quot;{$1 =&quot;test&quot;;print}&#39; test</code>，如果第一个域的值是“root”，则把它赋值为“test”，注意，字符串一定要用双引号。</li>
+<li>内建变量的使用。变量列表在前面已列出，现在举个例子说明一下。<code>awk -F: &#39;{IGNORECASE=1; $1 == &quot;MARY&quot;{print NR,$1,$2,$NF}&#39; test</code>，把IGNORECASE设为1代表忽略大小写，打印第一个域是mary的记录数、第一个域、第二个域和最后一个域。</li>
+</ol>
+
+<h3 id="6-2-begin模块">6.2 BEGIN模块</h3>
+
+<p>BEGIN模块后紧跟着动作块，这个动作块在awk处理任何输入文件之前执行。所以它可以在没有任何输入的情况下进行测试。它通常用来改变内建变量的值，如OFS,RS和FS等，以及打印标题。如：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="err">&#39;</span>BEGIN<span class="o">{</span><span class="nv">FS</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">;</span> <span class="nv">OFS</span><span class="o">=</span><span class="s2">&quot;\t&quot;</span><span class="p">;</span> <span class="nv">ORS</span><span class="o">=</span><span class="s2">&quot;\n\n&quot;</span><span class="o">}{</span>print <span class="nv">$1</span>,<span class="nv">$2</span>,<span class="nv">$3</span><span class="o">}</span> <span class="nb">test</span>。</code></pre></figure>
+
+<p>上式表示，在处理输入文件以前，域分隔符(FS)被设为冒号，输出文件分隔符(OFS)被设置为制表符，输出记录分隔符(ORS)被设置为两个换行符。</p>
+
+<h3 id="6-3-end模块">6.3 END模块</h3>
+
+<p>END不匹配任何的输入文件，但是执行动作块中的所有动作，它在所有输入文件处理完成后被执行。如</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;END{print &quot;The number of records is&quot; NR}&#39;</span> <span class="nb">test</span></code></pre></figure>
+
+<p>上式将打印所有被处理的记录数。</p>
+
+<h3 id="6-4-流程控制语句">6.4 流程控制语句</h3>
+
+<p><br/></p>
+
+<h4 id="6-4-1-if语句">6.4.1 if语句</h4>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{
+    if (expression){
+        statement; statement; ...
+    }
+}
+</code></pre></div>
+<p>例如：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{if ($1 &lt;$2) print $2 &quot;too high&quot;}&#39;</span> <span class="nb">test</span></code></pre></figure>
+
+<h4 id="6-4-2-if-else语句">6.4.2 if,else语句</h4>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{
+    if (expression){
+        statement; statement; ...
+    }
+    else{
+        statement; statement; ...
+    }
+}
+</code></pre></div>
+<p>例如：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{if ($1 &lt;$2){ print $2 &quot;too high&quot; }else{ print $2 &quot;euqal or low&quot;}}&#39;</span> <span class="nb">test</span></code></pre></figure>
+
+<h4 id="6-4-3-if-else-if-else语句">6.4.3 if,else if,else语句</h4>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{
+    if (expression){
+        statement; statement; ...
+    }
+    else if (expression){
+        statement; statement; ...
+    }
+    else if (expression){
+        statement; statement; ...
+    }
+    else {
+        statement; statement; ...
+    }
+}
+</code></pre></div>
+<p>例如：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{if ($1 &lt;$2){ print $2 &quot;too high&quot; }else if($1 == $2){ print $2 &quot;euqal&quot;}else { print $2 &quot;too low&quot;}}&#39;</span> <span class="nb">test</span></code></pre></figure>
+
+<h4 id="6-4-4-循环">6.4.4 循环</h4>
+
+<ol>
+<li><p>while循环：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">while(expression){
+}  
+</code></pre></div></li>
+<li><p>for循环：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">for(i=1;i&lt;10;i++){
+}   
+</code></pre></div></li>
+<li><p>special for 循环  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">for(item in itemArray){}
+</code></pre></div></li>
+<li><p>next语句从输入文件中读取一行，然后从头开始执行awk脚本。如：  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{ 
+    if ($1 ~/test/){next}  
+    else {print}  
+}
+</code></pre></div></li>
+<li><p>break用于在满足条件的情况下跳出循环；continue用于在满足条件的情况下忽略后面的语句，直接返回循环的顶端。</p></li>
+<li><p>exit语句用于结束awk程序，但不会略过END块。退出状态为0代表成功，非零值表示出错。</p></li>
+</ol>
+
+<h1 id="7-数组">7 数组</h1>
+
+<p>awk中的数组的下标可以是数字和字母，称为关联数组。</p>
+
+<ol>
+<li>用变量作为数组下标。如：<code>awk {name[x++]=$2};END{for(i=0;i&lt;NR;i++) print i,name[i]}&#39; test</code>。数组name中的下标是一个自定义变量x，awk初始化x的值为0，在每次使用后增加1。第二个域的值被赋给name数组的各个元素。在END模块中，for循环被用于循环整个数组，从下标为0的元素开始，打印那些存储在数组中的值。因为下标是关健字，所以它不一定从0开始，可以从任何值开始。</li>
+<li><p>special for循环用于读取关联数组中的元素。格式如下：  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{for (item in arrayname){}  
+</code></pre></div>
+<p>命令<code>awk &#39;/^tom/{name[NR]=$1}; END{for(i in name){print name[i]}}&#39; test</code>打印有值的数组元素。打印的顺序是随机的。</p></li>
+<li><p>用字符串作为下标。如：count[&quot;test&quot;]</p></li>
+<li><p>用域值作为数组的下标。一种新的for循环方式。如: <code>awk &#39;{count[$1]++} END{for(name in count) print name,count[name]}&#39; test</code>。该语句将打印$1中字符串出现的次数。它首先以第一个域作数组count的下标，第一个域变化，索引就变化。</p></li>
+<li><p>delete函数用于删除数组元素。如：<code>awk &#39;{line[x++]=$1} END{for(x in line) delete(line[x])}&#39; test</code>。分配给数组line的是第一个域的值，所有记录处理完成后，special for循环将删除每一个元素。</p></li>
+</ol>
+
+<h1 id="8-常用函数">8 常用函数</h1>
+
+<ul>
+<li><p>sub函数匹配记录中最大、最靠左边的子字符串的正则表达式，并用替换字符串替换这些字符串。<br>
+如果没有指定目标字符串就默认使用整个记录。替换只发生在第一次匹配的时候。格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">sub (regular expression, substitution string):
+sub (regular expression, substitution string, target string)
+</code></pre></div>
+<p>示例:<br>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{ sub(/test/, &quot;mytest&quot;); print }&#39;</span> testfile##在整个记录中匹配，替换只发生在第一次匹配发生的时候。如要在整个文件中进行匹配需要用到gsub<br>
+awk <span class="s1">&#39;{ sub(/test/, &quot;mytest&quot;); $1}; print }&#39;</span> testfile##在整个记录的第一个域中进行匹配，替换只发生在第一次匹配发生的时候。</code></pre></figure></p></li>
+<li><p>gsub函数作用如sub，但它在整个文档中进行匹配。格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">gsub (regular expression, substitution string)
+gsub (regular expression, substitution string, target string)
+</code></pre></div>
+<p>实例：<br>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{ gsub(/test/, &quot;mytest&quot;); print }&#39;</span> testfile <span class="c">##在整个文档中匹配test，匹配的都被替换成mytest。  </span><br>
+awk <span class="s1">&#39;{ gsub(/test/, &quot;mytest&quot;), $1 }; print }&#39;</span> testfile <span class="c">##在整个文档的第一个域中匹配，所有匹配的都被替换成mytest。</span></code></pre></figure></p></li>
+<li><p>index函数返回子字符串第一次被匹配的位置，偏移量从位置1开始。格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">index(string, substring)
+</code></pre></div>
+<p>实例：<br>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{ print index(&quot;test&quot;, &quot;mytest&quot;) }&#39;</span> testfile <span class="c">##返回test在mytest的位置，结果应该是3。</span></code></pre></figure></p></li>
+<li><p>length函数返回记录的字符数。格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">length( string )
+length
+</code></pre></div>
+<p>实例：<br>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{ print length( &quot;test&quot; ) }&#39;</span> <span class="c">##返回test字符串的长度。</span><br>
+awk <span class="s1">&#39;{ print length }&#39;</span> testfile <span class="c">##返回testfile文件中第条记录的字符数。</span></code></pre></figure></p></li>
+<li><p>substr函数返回从位置1开始的子字符串，如果指定长度超过实际长度，就返回整个字符串。格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">substr( string, starting position )
+substr( string, starting position, length of string )
+</code></pre></div>
+<p>实例：<br>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{ print substr( &quot;hello world&quot;, 7,11 ) }&#39;</span>  <span class="c">##截取了world子字符串。</span></code></pre></figure></p></li>
+<li><p>match函数返回在字符串中正则表达式位置的索引，如果找不到指定的正则表达式则返回0。match函数会设置内建变量RSTART为字符串中子字符串的开始位置，RLENGTH为到子字符串末尾的字符个数。substr可利于这些变量来截取字符串。函数格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">match( string, regular expression )
+</code></pre></div>
+<p>实例：<br>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{start=match(&quot;this is a test&quot;,/[a-z]+$/); print start}&#39;</span> <span class="c">##打印以连续小写字符结尾的开始位置，这里是11。</span><br>
+awk <span class="s1">&#39;{start=match(&quot;this is a test&quot;,/[a-z]+$/); print start, RSTART, RLENGTH }&#39;</span> <span class="c">##打印RSTART和RLENGTH变量，这里是11(start)，11(RSTART)，4(RLENGTH)。</span></code></pre></figure></p></li>
+<li><p>toupper和tolower函数可用于字符串大小间的转换，该功能只在gawk中有效。格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">toupper( string )
+tolower( string )
+</code></pre></div>
+<p>实例：<br>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{ print toupper(&quot;test&quot;), tolower(&quot;TEST&quot;) }&#39;</span></code></pre></figure></p></li>
+<li><p>split函数可按给定的分隔符把字符串分割为一个数组。如果分隔符没提供，则按当前FS值进行分割。格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">split( string, array, field separator )
+split( string, array )
+</code></pre></div>
+<p>实例：<br>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{ split( &quot;20:18:00&quot;, time, &quot;:&quot; ); print time[2] }&#39;</span> <span class="c">##把时间按冒号分割到time数组内，并显示第二个数组元素18。</span></code></pre></figure></p></li>
+<li><p>systime函数返回从1970年1月1日开始到当前时间(不计闰年)的整秒数。格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">systime()
+</code></pre></div>
+<p>实例：<br>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{ now = systime(); print now }&#39;</span></code></pre></figure></p></li>
+<li><p>strftime函数使用C库中的strftime函数格式化时间。格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">systime( [format specification][,timestamp] )
+</code></pre></div>
+<p>实例：<br>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">awk <span class="s1">&#39;{ now=strftime( &quot;%D&quot;, systime() ); print now }&#39;</span><br>
+awk <span class="s1">&#39;{ now=strftime(&quot;%m/%d/%y&quot;); print now }&#39;</span></code></pre></figure></p></li>
+<li><p>日期和时间格式说明符:</p>
+
+<table>
+<tr><td>格式</td><td>描述</td></tr>
+<tr><td>%a</td><td>星期几的缩写(Sun)</td></tr>
+<tr><td>%A</td><td>星期几的完整写法(Sunday)</td></tr>
+<tr><td>%b</td><td>月名的缩写(Oct)</td></tr>
+<tr><td>%B</td><td>月名的完整写法(October)</td></tr>
+<tr><td>%c</td><td>本地日期和时间</td></tr>
+<tr><td>%d</td><td>十进制日期</td></tr>
+<tr><td>%D</td><td>日期</td></tr>
+<tr><td>%e</td><td>日期，如果只有一位会补上一个空格</td></tr>
+<tr><td>%H</td><td>用十进制表示24小时格式的小时</td></tr>
+<tr><td>%I</td><td>用十进制表示12小时格式的小时</td></tr>
+<tr><td>%j</td><td>从1月1日起一年中的第几天</td></tr>
+<tr><td>%m</td><td>十进制表示的月份</td></tr>
+<tr><td>%M</td><td>十进制表示的分钟</td></tr>
+<tr><td>%p</td><td>12小时表示法(AM/PM)</td></tr>
+<tr><td>%S</td><td>十进制表示的秒</td></tr>
+<tr><td>%U</td><td>十进制表示的一年中的第几个星期(星期天作为一个星期的开始)</td></tr>
+<tr><td>%w</td><td>十进制表示的星期几(星期天是0)</td></tr>
+<tr><td>%W</td><td>十进制表示的一年中的第几个星期(星期一作为一个星期的开始)</td></tr>
+<tr><td>%x</td><td>重新设置本地日期(08/20/99)</td></tr>
+<tr><td>%X</td><td>重新设置本地时间(12：00：00)</td></tr>
+<tr><td>%y</td><td>两位数字表示的年(99)</td></tr>
+<tr><td>%Y</td><td>当前月份</td></tr>
+<tr><td>%Z</td><td>时区(PDT)</td></tr>
+<tr><td>%%</td><td>百分号(%)</td></tr>
+</table></li>
+</ul>
+
+				<div style="border-bottom:1px dotted;margin-top:20px;"></div>
+				<div id="disqus_thread"></div>
+			</div> <!-- end of entry -->
+			
+			<div style="width:240px;  float:right; padding:20px; margin-bottom:40px; ">
+				<div id="menuIndex" class="sidenav" style="max-height: 600px; position: fixed; top: 75px; "></div>
+			</div>
+
+
+			<script type="text/javascript">
+				$(document).ready(function() {
+				    $('#menuIndex').toc();
+				}); </script>
+		</div>
+	
+		<script>
+		/**
+		* RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+		* LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+		*/
+		
+		var disqus_config = function () {
+			this.page.url = /shell/2015/12/01/awk.html; // Replace PAGE_URL with your page's canonical URL variable
+			this.page.identifier = AWK学习笔记; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+		};
+		
+		(function() { // DON'T EDIT BELOW THIS LINE
+		var d = document, s = d.createElement('script');
+
+		s.src = '//cocorookie.disqus.com/embed.js';
+
+		s.setAttribute('data-timestamp', +new Date());
+		(d.head || d.body).appendChild(s);
+		})();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+		<footer class="footer">
+  <div class="container">
+    <p class="text-muted">版权所有 © 2015-2025 Cocorookie – liwenmao.com.</p>
+  </div>
+</footer>
+　　</body>
+　　</html>

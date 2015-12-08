@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+　　<html>
+		<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="/stylesheets/pygments.css" rel="stylesheet" type="text/css">
+<!-- <link href="/stylesheets/github.css" rel="stylesheet" type="text/css"> -->
+<link rel="stylesheet" type="text/css" href="/stylesheets/default.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/blog.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/sticky-footer-navbar.css"/>
+<script src="/javascripts/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+<link rel="shortcut icon" href="http://blog.liwenmao.com/favicon.ico" />
+<link rel="Bookmark" href="http://blog.liwenmao.com/favicon.ico" />
+<title>Shell的四种模式以及配置文件说明</title>
+</head>
+		<script src="/javascripts/toc.js" type="text/javascript"></script>
+		 <!-- <script type="text/javascript" src="/javascripts/post.min.js"></script> -->
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">cocorookie</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <!-- <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li> -->
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Categories <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <!-- <li><a href="#">Java</a></li> -->  
+                <li><a href="http://blog.liwenmao.com/app">app</a></li>
+                <li><a href="http://blog.liwenmao.com/oc">oc</a></li>
+                <li><a href="http://blog.liwenmao.com/shell">shell</a></li>
+                <!-- <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li> -->
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+		<div id="content">
+			<div class="entry">
+				<h1 class="entry-title"><a title="Shell的四种模式以及配置文件说明">Shell的四种模式以及配置文件说明</a></h1>
+				<!--p class="entry-date">2015-01-10</p-->
+				<div class="pageInfo">
+					<span>Posted by 	
+					北羽
+					</span>
+					<span class="point">•</span>
+					<span><time pubdate="" data-updated="true">08 Dec 2015</time></span>
+					<span class="point">•</span>
+					<span class="categories">
+						
+						<a href="/shell" title="Category: shell" rel="category">shell</a>
+						
+						
+					</span>
+					<span class="comment">
+						<a href="#comments_container" title="Comments"><i class="icon-comment-o"></i></a>
+					</span>
+				</div>
+				<div class="pageTag">
+					
+					<!--a href="/blog/tag/#Jekyll-ref" title="Tag: Jekyll" rel="tag">Jekyll</a-->
+					<a  rel="tag">shell</a>&nbsp;
+					
+				</div>
+				<h1 id="bashrc-vs-profile">bashrc VS profile</h1>
+
+<p>profile类型文件，它是某个用户唯一的用来设置全局环境变量的地方, 因为用户可以有多个shell比如bash, sh, zsh等, 但像环境变量这种其实只需要在统一的一个地方初始化就可以, 而这个地方就是profile，所以启动一个login shell会加载此文件，后面由此shell中启动的新shell进程如bash，sh，zsh等都可以由login shell中继承环境变量等配置。  </p>
+
+<p>接下来看bashrc，其后缀rc的意思为Run Commands，由名字可以推断出，此处存放bash需要运行的命令，但注意，这些命令一般只用于交互式的shell，通常在这里会设置交互所需要的所有信息，比如bash的补全、alias、颜色、提示符等等。</p>
+
+<h1 id="bash的四种模式">Bash的四种模式</h1>
+
+<p>在Bash的四种模式中，有两个概念要先搞清楚，即<code>login</code>和<code>interactive</code>  </p>
+
+<p><code>interactive</code>意为交互，可以理解为用户的输入、输出都会显示在控制台上。所以一般来说需要用户交互的，即一个命令一个命令的输入的shell都是<code>interactive shell</code>。<br><br>
+而如果没有交互的，那么就是<code>non-interactive shell</code>。 例如我们用<code>bash script.sh</code> 此类执行脚本的命令就会启动一个non-interactive shell。 </p>
+
+<p><code>login</code>就是需要登录。 <code>login shell</code>是指用户以非图形化界面或者以ssh登陆到机器上时获得的第一个shell，简单些说就是需要输入用户名和密码的shell因此通常不管以何种方式登陆机器后用户获得的第一个shell就是<code>login shell</code>。  </p>
+
+<h3 id="interactive-login-shell">interactive + login shell</h3>
+
+<p>此模式下最简单的两个例子为：  </p>
+
+<ul>
+<li>用户直接登录机器获得的第一个shell<br></li>
+<li>用户使用<code>ssh user@remote</code>获得的shell</li>
+</ul>
+
+<p>这种模式下，shell首先加载<code>/etc/profile</code>，然后再尝试依次去加载下列三个配置文件之一，一旦找到其中一个便不再接着寻找：</p>
+
+<ul>
+<li>~/.bash_profile</li>
+<li>~/.bash_login</li>
+<li>~/.profile</li>
+</ul>
+
+<h3 id="non-interactive-login-shell">non-interactive + login shell</h3>
+
+<p>一种创建此shell的方法为：bash -l script.sh，前面提到过-l参数是将shell作为一个login shell启动，而执行脚本又使它为non-interactive shell。<br><br>
+这种情况下和第一种的配置文件加载顺序完全一致。</p>
+
+<h3 id="interactive-non-login-shell">interactive + non-login shell</h3>
+
+<p>第三种模式为交互式的非登陆shell，这种模式最常见的情况为在一个已有shell中运行<code>bash</code>，此时会打开一个交互式的shell，而因为不再需要登陆，因此不是login shell。</p>
+
+<p>对于此种情况，启动shell时会去查找并加载<code>/etc/bash.bashrc</code>和<code>~/.bashrc</code>文件。</p>
+
+<h3 id="non-interactive-non-login-shell">non-interactive + non-login shell</h3>
+
+<p>最后一种模式为非交互非登陆的shell，创建这种shell典型有两种方式：  </p>
+
+<ul>
+<li>bash script.sh</li>
+<li>ssh user@remote command<br></li>
+</ul>
+
+<p>这两种都是创建一个shell，执行完脚本之后便退出，不再需要与用户交互。<br><br>
+对于这种模式而言，它会去寻找环境变量<code>BASH_ENV</code>，将变量的值作为文件名进行查找，如果找到便加载它。</p>
+
+<h1 id="最佳实践">最佳实践</h1>
+
+<p>我们面对着两种格式的配置文件（profile vs rc），还有四种不同的模式， 看起来非常的复杂， 但实际上，有一种最简单的方式来应对这些烦人的问题，那就是，在你的profile文件中只做一件事<code>source 对应的rc文件</code>,所有真正的配置都放在rc文件中。<br>
+例如在<code>/etc/profile</code>文件中只有如下一行 </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">source /etc/bash.bashrc
+</code></pre></div>
+<p>在<code>~/.bash_profile</code>和<code>~/.profile</code>中只有如下一行</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">source ~/.bashrc
+</code></pre></div>
+<p>这种情况下， 我们还漏了一种，那就是<code>non-interactive + non-login shell</code>, 这个很讨厌，我们需要保证我们的<code>BASH_ENV</code>变量被正确的设置了。</p>
+
+				<div style="border-bottom:1px dotted;margin-top:20px;"></div>
+				<div id="disqus_thread"></div>
+			</div> <!-- end of entry -->
+			
+			<div style="width:240px;  float:right; padding:20px; margin-bottom:40px; ">
+				<div id="menuIndex" class="sidenav" style="max-height: 600px; position: fixed; top: 75px; "></div>
+			</div>
+
+
+			<script type="text/javascript">
+				$(document).ready(function() {
+				    $('#menuIndex').toc();
+				}); </script>
+		</div>
+	
+		<script>
+		/**
+		* RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+		* LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+		*/
+		
+		var disqus_config = function () {
+			this.page.url = /shell/2015/12/08/shell-properties-mode.html; // Replace PAGE_URL with your page's canonical URL variable
+			this.page.identifier = Shell的四种模式以及配置文件说明; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+		};
+		
+		(function() { // DON'T EDIT BELOW THIS LINE
+		var d = document, s = d.createElement('script');
+
+		s.src = '//cocorookie.disqus.com/embed.js';
+
+		s.setAttribute('data-timestamp', +new Date());
+		(d.head || d.body).appendChild(s);
+		})();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+		<footer class="footer">
+  <div class="container">
+    <p class="text-muted">版权所有 © 2015-2025 Cocorookie – liwenmao.com.</p>
+  </div>
+</footer>
+　　</body>
+　　</html>

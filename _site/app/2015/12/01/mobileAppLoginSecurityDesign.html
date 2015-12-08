@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+　　<html>
+		<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="/stylesheets/pygments.css" rel="stylesheet" type="text/css">
+<!-- <link href="/stylesheets/github.css" rel="stylesheet" type="text/css"> -->
+<link rel="stylesheet" type="text/css" href="/stylesheets/default.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/blog.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/sticky-footer-navbar.css"/>
+<script src="/javascripts/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+<link rel="shortcut icon" href="http://blog.liwenmao.com/favicon.ico" />
+<link rel="Bookmark" href="http://blog.liwenmao.com/favicon.ico" />
+<title>移动APP登录安全设计</title>
+</head>
+		<script src="/javascripts/toc.js" type="text/javascript"></script>
+		 <!-- <script type="text/javascript" src="/javascripts/post.min.js"></script> -->
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">cocorookie</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <!-- <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li> -->
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Categories <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <!-- <li><a href="#">Java</a></li> -->  
+                <li><a href="http://blog.liwenmao.com/app">app</a></li>
+                <li><a href="http://blog.liwenmao.com/oc">oc</a></li>
+                <li><a href="http://blog.liwenmao.com/shell">shell</a></li>
+                <!-- <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li> -->
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+		<div id="content">
+			<div class="entry">
+				<h1 class="entry-title"><a title="移动APP登录安全设计">移动APP登录安全设计</a></h1>
+				<!--p class="entry-date">2015-01-10</p-->
+				<div class="pageInfo">
+					<span>Posted by 	
+					北羽
+					</span>
+					<span class="point">•</span>
+					<span><time pubdate="" data-updated="true">01 Dec 2015</time></span>
+					<span class="point">•</span>
+					<span class="categories">
+						
+						<a href="/app" title="Category: app" rel="category">app</a>
+						
+						
+					</span>
+					<span class="comment">
+						<a href="#comments_container" title="Comments"><i class="icon-comment-o"></i></a>
+					</span>
+				</div>
+				<div class="pageTag">
+					
+					<!--a href="/blog/tag/#Jekyll-ref" title="Tag: Jekyll" rel="tag">Jekyll</a-->
+					<a  rel="tag">移动</a>&nbsp;
+					
+					<!--a href="/blog/tag/#Jekyll-ref" title="Tag: Jekyll" rel="tag">Jekyll</a-->
+					<a  rel="tag">app</a>&nbsp;
+					
+					<!--a href="/blog/tag/#Jekyll-ref" title="Tag: Jekyll" rel="tag">Jekyll</a-->
+					<a  rel="tag">登录</a>&nbsp;
+					
+					<!--a href="/blog/tag/#Jekyll-ref" title="Tag: Jekyll" rel="tag">Jekyll</a-->
+					<a  rel="tag">安全</a>&nbsp;
+					
+				</div>
+				<p>现在每个移动APP几乎都会有登录模块， 并且移动APP都是一次登录之后，只要没有卸载APP，那么后续都会自动登录的。 那么该如何设计一个安全的登录模块的？</p>
+
+<h3 id="不要在客户端储存用户名密码">不要在客户端储存用户名密码</h3>
+
+<p>这是一个基本原则， 有些程序员为了省事，把用户名密码存储在客户端，每次用户打开APP时，自动帮用户提交用户名密码来达到免登的假象。 实际上这是非常不负责任的， 如果登录请求使用的是Https还好（依然有泄露危险），否则用户的用户名和密码是非常不安全的。 考虑到很多用户很多的网站使用的都是相同的用户名密码，一旦在你的APP泄露了用户的用户名密码，那么对用户造成的损失是非常巨大的。  </p>
+
+<h3 id="使用ssl">使用SSL</h3>
+
+<p>网络传输的过程是我们APP不可控的，也许用户现在就是处于一个不安全的网络环境（某些黑心公共wifi等），如果我们用户登录的时候，明文传输用户的用户名密码，那么还是会有很大的风险会泄露的。 所以我们要把登录接口设计成使用SSL， 即使传输过程中被截获， 黑客也无法知道消息的内容。   </p>
+
+<p>至于是不是全站使用SSL，请视自己的安全级别而定，毕竟使用SSL会影响一定的性能。</p>
+
+<h3 id="使用session">使用Session</h3>
+
+<p>PC端的登录一般都是使用Session来保持登录状态，我们可以把Session放到内存中，保持登录状态的同时，还可以同时保存些常用的信息（用户id，昵称，头像地址等）。 但是Session不应该一直存在，否则我们的内存早晚都会被消耗完，所以一般做法是用户一旦没有和服务器在30分钟直接做任何的交互，那么就会失效掉Session。  </p>
+
+<p>移动APP端我们也可以采用这种方法，但是移动APP应该是每次都是自动登录的，那么当Session失效掉之后，我们该怎么办呢？</p>
+
+<h3 id="使用access_token">使用access_token</h3>
+
+<p>这里借鉴Oauth的理念， 使用access_token作为用户登录之后的一个凭证存储到客户端， 这样当Session失效掉的时候，我们可以认为access_token来重新生成一个新的Session。 </p>
+
+<p>但是这里依然有一个问题， <code>access_token</code>泄露了怎么办？ Oauth的做法是使access_token定期失效掉（例如1天），这样即使这个access_token泄露了，那么对用户的影响也是在有限的时间内。  </p>
+
+<p>那么当access_token过期了怎么办？</p>
+
+<h3 id="使用refresh_token">使用refresh_token</h3>
+
+<p>Oauth里面使用refresh_token来重新获取access_token， 而refresh_token是长期有效的。 当access_token过期的时候， 我们就要用refresh_token来重新获取一个access_token。  </p>
+
+<p>那么一旦别人获取到了refresh_token泄露，那么岂不黑客就会为所欲为了？  </p>
+
+<p>理论上来说，是的，一旦黑客获取到了refresh_token，那么他就可以无限次的获取到access_token， 这样除非用户修改密码（这时会重新生成refresh_token），否则黑客就可以一直获取到用户信息。  </p>
+
+<p>Oauth的解释是这样的，refresh_token的使用应该只和授权服务器交互，并且这种交互必须使用SSL，而access_token要用来和资源服务器交互，这里并没有强制使用SSL，所以refresh_token被泄露的可能性是很小的。  </p>
+
+<p>所以这里，我们也要如此设计，设计到使用refresh_token的地方（登录接口--生成refresh_token, 刷新access_token接口）都必须是使用SSL。</p>
+
+				<div style="border-bottom:1px dotted;margin-top:20px;"></div>
+				<div id="disqus_thread"></div>
+			</div> <!-- end of entry -->
+			
+			<div style="width:240px;  float:right; padding:20px; margin-bottom:40px; ">
+				<div id="menuIndex" class="sidenav" style="max-height: 600px; position: fixed; top: 75px; "></div>
+			</div>
+
+
+			<script type="text/javascript">
+				$(document).ready(function() {
+				    $('#menuIndex').toc();
+				}); </script>
+		</div>
+	
+		<script>
+		/**
+		* RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+		* LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+		*/
+		
+		var disqus_config = function () {
+			this.page.url = /app/2015/12/01/mobileAppLoginSecurityDesign.html; // Replace PAGE_URL with your page's canonical URL variable
+			this.page.identifier = 移动APP登录安全设计; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+		};
+		
+		(function() { // DON'T EDIT BELOW THIS LINE
+		var d = document, s = d.createElement('script');
+
+		s.src = '//cocorookie.disqus.com/embed.js';
+
+		s.setAttribute('data-timestamp', +new Date());
+		(d.head || d.body).appendChild(s);
+		})();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+		<footer class="footer">
+  <div class="container">
+    <p class="text-muted">版权所有 © 2015-2025 Cocorookie – liwenmao.com.</p>
+  </div>
+</footer>
+　　</body>
+　　</html>

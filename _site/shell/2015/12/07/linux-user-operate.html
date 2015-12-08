@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+　　<html>
+		<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="/stylesheets/pygments.css" rel="stylesheet" type="text/css">
+<!-- <link href="/stylesheets/github.css" rel="stylesheet" type="text/css"> -->
+<link rel="stylesheet" type="text/css" href="/stylesheets/default.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/blog.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/sticky-footer-navbar.css"/>
+<script src="/javascripts/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+<link rel="shortcut icon" href="http://blog.liwenmao.com/favicon.ico" />
+<link rel="Bookmark" href="http://blog.liwenmao.com/favicon.ico" />
+<title>Linux用户管理</title>
+</head>
+		<script src="/javascripts/toc.js" type="text/javascript"></script>
+		 <!-- <script type="text/javascript" src="/javascripts/post.min.js"></script> -->
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">cocorookie</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <!-- <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li> -->
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Categories <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <!-- <li><a href="#">Java</a></li> -->  
+                <li><a href="http://blog.liwenmao.com/app">app</a></li>
+                <li><a href="http://blog.liwenmao.com/oc">oc</a></li>
+                <li><a href="http://blog.liwenmao.com/shell">shell</a></li>
+                <!-- <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li> -->
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+		<div id="content">
+			<div class="entry">
+				<h1 class="entry-title"><a title="Linux用户管理">Linux用户管理</a></h1>
+				<!--p class="entry-date">2015-01-10</p-->
+				<div class="pageInfo">
+					<span>Posted by 	
+					北羽
+					</span>
+					<span class="point">•</span>
+					<span><time pubdate="" data-updated="true">07 Dec 2015</time></span>
+					<span class="point">•</span>
+					<span class="categories">
+						
+						<a href="/shell" title="Category: shell" rel="category">shell</a>
+						
+						
+					</span>
+					<span class="comment">
+						<a href="#comments_container" title="Comments"><i class="icon-comment-o"></i></a>
+					</span>
+				</div>
+				<div class="pageTag">
+					
+					<!--a href="/blog/tag/#Jekyll-ref" title="Tag: Jekyll" rel="tag">Jekyll</a-->
+					<a  rel="tag">shell</a>&nbsp;
+					
+				</div>
+				<h1 id="1-用户操作命令">1. 用户操作命令</h1>
+
+<p><br/></p>
+
+<h3 id="用户添加命令">用户添加命令</h3>
+<div class="highlight"><pre><code class="language-text" data-lang="text">useradd option 用户名
+-g 指定用户所在的组名，即initial group，用户登录自动获得这个组的权限
+-d 指定用户的主目录
+-m 和-d命令配合使用时，如果主目录不存在，则创建
+-u 指定用户的用户号
+-G 指定用户的附加组
+</code></pre></div>
+<h3 id="用户删除命令">用户删除命令</h3>
+<div class="highlight"><pre><code class="language-text" data-lang="text">userdel option 用户名
+-r 同时删除用户的主目录
+</code></pre></div>
+<h3 id="用户修改命令">用户修改命令</h3>
+<div class="highlight"><pre><code class="language-text" data-lang="text">usermod option 用户名
+-g 指定用户所在的组名，即initial group，用户登录自动获得这个组的权限
+-d 指定用户的主目录
+-m 和-d命令配合使用时，如果主目录不存在，则创建
+-u 指定用户的用户号
+-G 指定用户的附加组
+</code></pre></div>
+<h3 id="修改用户密码">修改用户密码</h3>
+<div class="highlight"><pre><code class="language-text" data-lang="text">passwd option 用户名（如果不指定用户名，则默认修改当前登录用户）
+-l 锁定用户名，即禁用账户
+-u 解锁账户
+-d 删除用户密码
+</code></pre></div>
+<h1 id="2-用户组操作命令">2. 用户组操作命令</h1>
+
+<p><br/></p>
+
+<h3 id="用户组添加命令">用户组添加命令</h3>
+<div class="highlight"><pre><code class="language-text" data-lang="text">groupadd option 组名
+-g 指定用户组的组标识号
+</code></pre></div>
+<h3 id="用户组删除命令">用户组删除命令</h3>
+<div class="highlight"><pre><code class="language-text" data-lang="text">groupdel 组名
+</code></pre></div>
+<h3 id="用户组修改命令">用户组修改命令</h3>
+<div class="highlight"><pre><code class="language-text" data-lang="text">groupmod option 组名
+-g 修改用户组的组标识号
+-n 指定用户组的新组名
+</code></pre></div>
+<h1 id="3-与账户有关的系统文件">3. 与账户有关的系统文件</h1>
+
+<p><br/></p>
+
+<h3 id="文件-etc-passwd">文件/etc/passwd</h3>
+
+<p>文件/etc/passwd中记录了系统中每个用户的一些属性。他的内容格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">用户名:口令:用户标识号:组标识号:注释性描述:主目录:登录Shell
+</code></pre></div>
+<p>其中口令并不真的是用户的口令，而是一个shadow，真正的用户密码存储在/etc/shadow中  </p>
+
+<h3 id="文件-etc-shadow">文件/etc/shadow</h3>
+
+<p>文件/etc/shadow文件中存储了所有用户加密过之后的密码。</p>
+
+<h3 id="文件-etc-group">文件/etc/group</h3>
+
+<p>文件/etc/group中存储了所有的用户组的信息。信息格式如下：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">组名:口令:组标识号:组内用户列表
+</code></pre></div>
+<h3 id="文件-etc-sudoers">文件/etc/sudoers</h3>
+
+<p>我们需要使用sudo命令来使用户使用root权限来执行一些命令。 要想使用sudo命令，那么我们就需要编辑/etc/sudoers文件。 我们有如下几种方式来赋予用户权限：<br><br>
+1.赋予单个用户权限</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">cocomao ALL=(ALL) ALL
+用户名  允许使用sudo命令登录主机 = （允许sudo之后的目的身份）sudo之后执行的命令
+</code></pre></div>
+<p>2.赋予用户组权限</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">%admin ALL=(ALL) ALL
+%用户组 允许使用sudo命令登录主机 = （允许sudo之后的目的身份）sudo之后执行的命令
+</code></pre></div>
+				<div style="border-bottom:1px dotted;margin-top:20px;"></div>
+				<div id="disqus_thread"></div>
+			</div> <!-- end of entry -->
+			
+			<div style="width:240px;  float:right; padding:20px; margin-bottom:40px; ">
+				<div id="menuIndex" class="sidenav" style="max-height: 600px; position: fixed; top: 75px; "></div>
+			</div>
+
+
+			<script type="text/javascript">
+				$(document).ready(function() {
+				    $('#menuIndex').toc();
+				}); </script>
+		</div>
+	
+		<script>
+		/**
+		* RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+		* LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+		*/
+		
+		var disqus_config = function () {
+			this.page.url = /shell/2015/12/07/linux-user-operate.html; // Replace PAGE_URL with your page's canonical URL variable
+			this.page.identifier = Linux用户管理; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+		};
+		
+		(function() { // DON'T EDIT BELOW THIS LINE
+		var d = document, s = d.createElement('script');
+
+		s.src = '//cocorookie.disqus.com/embed.js';
+
+		s.setAttribute('data-timestamp', +new Date());
+		(d.head || d.body).appendChild(s);
+		})();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+		<footer class="footer">
+  <div class="container">
+    <p class="text-muted">版权所有 © 2015-2025 Cocorookie – liwenmao.com.</p>
+  </div>
+</footer>
+　　</body>
+　　</html>

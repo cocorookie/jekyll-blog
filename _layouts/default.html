@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+　　<html>
+		{% include header.html %}
+　　<body>
+		{% include navbar.html %}
+
+		<div class="container">
+
+   
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main" style="margin-top:40px">
+　　　　	{{ content }}	      
+        </div><!-- /.blog-main -->
+        {% include sidebar.html %}
+      </div><!-- /.row -->
+    </div>
+	
+
+		{% include footer.html %}
+
+　　</body>
+　　</html>

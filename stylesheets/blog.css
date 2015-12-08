@@ -1,0 +1,19 @@
+ul.nav.navbar-nav li{
+  margin: 0;
+}
+.anchor {
+  padding-top: 60px;
+}
+
+.clickable-header {
+  cursor:pointer;
+}
+.clickable-header:hover {
+  text-decoration:underline;
+}
+.top-level-header {
+  display:inline;
+}
+.sub-level-header {
+  display:  inline; 
+}
