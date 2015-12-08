@@ -1,5 +1,5 @@
 # 依赖
-[redcarpet]()
+[redcarpet](https://github.com/vmg/redcarpet/blob/v2.2.2/README.markdown#and-its-like-really-simple-to-use)
 # 重要文件说明
 * _includes/header.html 引入的js和css文件管理
 * _includes/sidebar.html 生成的文章餐单放在这里
@@ -22,3 +22,4 @@ _layouts/post.html 中需要配置自己的[disqus](https://disqus.com/)，申�
 		</script>
 		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 ```
+搜索所有和`北羽`,`liwenmao.com`,`cocorookie`相关的文字，替换成自己的
